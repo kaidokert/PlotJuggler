@@ -134,8 +134,7 @@ cmake --build build/PlotJuggler --config RelWithDebInfo --target install
 Dependencies in Windows are managed either using
 [conan](https://conan.io/) or [vcpkg](https://vcpkg.io/en/index.html)
 
-The rest of this section assumes that you installed
-You need to install first [Qt](https://www.qt.io/download-open-source) and
+First, you need to install [Qt5](https://www.qt.io/download-open-source) and
 [git](https://desktop.github.com/).
 
 **Visual studio 2019 (16)**, that is part of the Qt 5.15.x installation,
@@ -156,17 +155,18 @@ Note: the Arrow/Parque plugin is not supported in Conan. Use vcpkg instead, if y
 that specific plugin.
 
 ```batch
-conan install src/PlotJuggler --install-folder build/PlotJuggler ^
-      --build=missing -pr:b=default
+conan install src/PlotJuggler --output-folder build/PlotJuggler ^
+      --build=missing -pr:b=default ^
+      -s compiler=msvc -s compiler.version=192
 
 set CMAKE_TOOLCHAIN=%cd%/build/PlotJuggler/conan_toolchain.cmake
 
 cmake -G "Visual Studio 16" ^
       -S src/PlotJuggler -B build/PlotJuggler ^
+      -DBUILDING_WITH_CONAN=ON ^
       -DCMAKE_TOOLCHAIN_FILE=%CMAKE_TOOLCHAIN%  ^
       -DCMAKE_INSTALL_PREFIX=%cd%/install ^
       -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
-
 
 cmake --build build/PlotJuggler --config Release --target install
 ```
